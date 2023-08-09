@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RestaurantAPI_5._0.Entities;
 using RestaurantAPI_5._0.Services;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,5 +53,6 @@ namespace RestaurantAPI_5._0
                 endpoints.MapControllers();
             });
         }
+        
     }
 }

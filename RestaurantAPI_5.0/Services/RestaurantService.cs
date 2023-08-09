@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestaurantAPI_5._0.Entities;
 using RestaurantAPI_5._0.Models;
@@ -11,16 +12,48 @@ namespace RestaurantAPI_5._0.Services
     {
         RestaurantDto GetById(int id);
         IEnumerable<RestaurantDto> GetAll();
-        void Create(CreateRestaurantDto dto);
+        int Create(CreateRestaurantDto dto);
+        bool Delete(int id);
+        bool Update(int id, UpdateRestaurantDto dto);
     }
 
-    public class RestaurantService
+    public class RestaurantService : IRestaurantService
     {
         private readonly RestaurantDbContext _dbContext;
         private readonly IMapper _mapper;
         public RestaurantService(RestaurantDbContext dbContext, IMapper mapper)
         {
+            _dbContext = dbContext;
+            _mapper = mapper;
+        }
 
+        public bool Update(int id, UpdateRestaurantDto dto)
+        {
+            var restaurant = _dbContext
+               .Restaurants
+               .FirstOrDefault(r => r.Id == id);
+            if (restaurant is null)
+                return false;
+            restaurant.Name = dto.Name;
+            restaurant.Description = dto.Description;
+            restaurant.HasDelivery = dto.HasDelivery;
+
+            _dbContext.SaveChanges();
+            return true;
+        }
+
+        public bool Delete(int id)
+        {
+            var restaurant = _dbContext
+                  .Restaurants
+                  .FirstOrDefault(r => r.Id == id);
+
+            if (restaurant is null)
+                return false;
+
+            _dbContext.Restaurants.Remove(restaurant);
+            _dbContext.SaveChanges();
+            return true;
         }
         public RestaurantDto GetById(int id)
         {
@@ -44,11 +77,12 @@ namespace RestaurantAPI_5._0.Services
             var restaurantsDtos = _mapper.Map<List<RestaurantDto>>(restaurants);
             return restaurantsDtos;
         }
-        public void Create(CreateRestaurantDto dto)
+        public int Create(CreateRestaurantDto dto)
         {
             var restaurant = _mapper.Map<Restaurant>(dto);
             _dbContext.Restaurants.Add(restaurant);
             _dbContext.SaveChanges();
+            return restaurant.Id;
         }
 
     }
