@@ -29,7 +29,7 @@ namespace RestaurantAPI_5._0.Controllers
                 return BadRequest(ModelState);
             }
             var isUpdated = _restaurantService.Update(id, dto);
-            if(isUpdated)
+            if(!isUpdated)
             { 
                 return NotFound();
             }

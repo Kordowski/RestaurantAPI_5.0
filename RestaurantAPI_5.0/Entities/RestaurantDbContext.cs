@@ -4,7 +4,7 @@ namespace RestaurantAPI_5._0.Entities
 {
     public class RestaurantDbContext:DbContext
     {
-        private string _connectionString = "Server=DESKTOP-KKNFRPE;Database=RestaurantDb;Trusted_Connection=True;";
+        private string _connectionString = "Server=DESKTOP-KKNFRPE;Database=estaurantDb;Trusted_Connection=True;";
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Dish> Dishes { get; set; }
