@@ -16,20 +16,25 @@ namespace RestaurantAPI_5._0
         {
             if (!_dbContext.Database.CanConnect())
                 return;
+            seedRestaurants();
+            seedRoles();
+            _dbContext.SaveChanges();
+        }
+        private void seedRoles()
+        {
             if (_dbContext.Roles.Any())
                 return;
-            var roles = GetRoles();
-            _dbContext.Roles.AddRange(roles);
-            _dbContext.SaveChanges();
+                var roles = GetRoles();
+                _dbContext.Roles.AddRange(roles);
+        }
+        private void seedRestaurants()
+        {
             if (_dbContext.Restaurants.Any())
                 return;
-
             var restaurants = GetRestaurants();
             _dbContext.Restaurants.AddRange(restaurants);
-            _dbContext.SaveChanges();
-
-
         }
+
         private IEnumerable<Role> GetRoles()
         {
             var roles = new List<Role>()
