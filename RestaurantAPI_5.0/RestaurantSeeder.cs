@@ -14,15 +14,16 @@ namespace RestaurantAPI_5._0
         }
         public void Seed()
         {
-            if (_dbContext.Database.CanConnect())
-            {
-                if (!_dbContext.Restaurants.Any())
-                {
-                    var restaurants = GetRestaurants();
-                    _dbContext.Restaurants.AddRange(restaurants);
-                    _dbContext.SaveChanges();
-                }
-            }
+            if (!_dbContext.Database.CanConnect())
+                return;
+            if (_dbContext.Restaurants.Any())
+                return;
+
+            var restaurants = GetRestaurants();
+            _dbContext.Restaurants.AddRange(restaurants);
+            _dbContext.SaveChanges();
+
+
         }
 
         private IEnumerable<Restaurant> GetRestaurants()

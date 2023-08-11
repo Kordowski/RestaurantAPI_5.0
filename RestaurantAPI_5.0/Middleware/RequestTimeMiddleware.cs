@@ -7,7 +7,7 @@ namespace RestaurantAPI_5._0.Middleware
 {
     public class RequestTimeMiddleware : IMiddleware
     {
-        private Stopwatch _stopWatch;
+        private readonly Stopwatch _stopWatch;
         private readonly ILogger _logger;
         public RequestTimeMiddleware(ILogger<RequestTimeMiddleware> logger)
         {
