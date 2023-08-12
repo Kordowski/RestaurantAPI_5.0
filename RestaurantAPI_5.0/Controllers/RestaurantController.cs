@@ -24,7 +24,7 @@ namespace RestaurantAPI_5._0.Controllers
             _restaurantService = restaurantService;
         }
         [HttpGet("{id}")]
-        [AllowAnonymous]
+        [Authorize(Policy ="CreatedAtleast2Restaurants")]
         public ActionResult<RestaurantDto> Get([FromRoute] int id)
         {
             var restaurant = _restaurantService.GetById(id);
