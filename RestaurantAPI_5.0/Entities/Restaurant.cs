@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Security.Cryptography.X509Certificates;
 
 namespace RestaurantAPI_5._0.Entities
 {
@@ -12,6 +13,8 @@ namespace RestaurantAPI_5._0.Entities
         public bool HasDelivery { get; set; }
         public string ContactEmail { get; set; }
         public string ContactNumber { get; set; }
+        public int? CreatedById { get; set; }
+        public virtual User CreatedBy { get; set; }
         public int AddressId { get; set; }
         public virtual Address Address { get; set; }
         public virtual List<Dish> Dishes { get; set; }

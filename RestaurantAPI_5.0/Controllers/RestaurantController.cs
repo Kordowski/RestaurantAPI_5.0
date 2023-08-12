@@ -8,13 +8,13 @@ using RestaurantAPI_5._0.Models;
 using RestaurantAPI_5._0.Services;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace RestaurantAPI_5._0.Controllers
 {
     [Route("api/restaurant")]
     [ApiController]
-    [Authorize(Roles = "Admin,Manager")]
-    //[Authorize]
+    [Authorize]
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
@@ -31,7 +31,7 @@ namespace RestaurantAPI_5._0.Controllers
             return Ok(restaurant);
         }
         [HttpGet]
-        [Authorize]
+        [Authorize(Policy ="Atleast20")]
         public ActionResult<IEnumerable<RestaurantDto>> GetAll()
         {
             var restaurantsDto = _restaurantService.GetAll();
@@ -39,16 +39,19 @@ namespace RestaurantAPI_5._0.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Manager")]
         public ActionResult Update([FromBody] UpdateRestaurantDto dto, [FromRoute] int id)
         {
-           _restaurantService.Update(id, dto);
+           _restaurantService.Update(id, dto,User);
             return Ok();
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Manager")]
+
         public ActionResult Delete([FromRoute] int id)
         {
-            _restaurantService.Delete(id);
+            _restaurantService.Delete(id,User);
             return NoContent();
         }
 
@@ -56,7 +59,8 @@ namespace RestaurantAPI_5._0.Controllers
         [Authorize(Roles = "Admin,Manager")]
         public ActionResult CreateRestaurant([FromBody] CreateRestaurantDto dto)
         {
-            int id = _restaurantService.Create(dto);
+            var userId = int.Parse(User.FindFirst(c=>c.Type == ClaimTypes.NameIdentifier).Value);
+            int id = _restaurantService.Create(dto,userId);
             return Created($"/api/restaurant/{id}", null);
         }
 
