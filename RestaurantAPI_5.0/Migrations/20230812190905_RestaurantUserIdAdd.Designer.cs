@@ -10,7 +10,7 @@ using RestaurantAPI_5._0.Entities;
 namespace RestaurantAPI_5._0.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
-    [Migration("20230812180547_RestaurantUserIdAdd")]
+    [Migration("20230812190905_RestaurantUserIdAdd")]
     partial class RestaurantUserIdAdd
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,7 +92,7 @@ namespace RestaurantAPI_5._0.Migrations
                     b.Property<string>("ContactNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CreatedById")
+                    b.Property<int?>("CreatedById")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -189,9 +189,7 @@ namespace RestaurantAPI_5._0.Migrations
 
                     b.HasOne("RestaurantAPI_5._0.Entities.User", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CreatedById");
 
                     b.Navigation("Address");
 

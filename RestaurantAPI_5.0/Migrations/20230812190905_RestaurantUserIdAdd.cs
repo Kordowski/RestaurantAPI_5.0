@@ -10,8 +10,7 @@ namespace RestaurantAPI_5._0.Migrations
                 name: "CreatedById",
                 table: "Restaurants",
                 type: "int",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Restaurants_CreatedById",
@@ -24,7 +23,7 @@ namespace RestaurantAPI_5._0.Migrations
                 column: "CreatedById",
                 principalTable: "Users",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

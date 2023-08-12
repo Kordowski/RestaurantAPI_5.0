@@ -9,7 +9,7 @@ namespace RestaurantAPI_5._0.Services
         RestaurantDto GetById(int id);
         IEnumerable<RestaurantDto> GetAll();
         int Create(CreateRestaurantDto dto, int userId);
-        void Delete(int id, ClaimsPrincipal user);
-        void Update(int id, UpdateRestaurantDto dto, ClaimsPrincipal user);
+        void Delete(int id);
+        void Update(int id, UpdateRestaurantDto dto);
     }
 }

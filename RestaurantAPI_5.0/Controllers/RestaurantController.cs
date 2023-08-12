@@ -42,7 +42,7 @@ namespace RestaurantAPI_5._0.Controllers
         [Authorize(Roles = "Admin,Manager")]
         public ActionResult Update([FromBody] UpdateRestaurantDto dto, [FromRoute] int id)
         {
-           _restaurantService.Update(id, dto,User);
+           _restaurantService.Update(id, dto);
             return Ok();
         }
 
@@ -51,7 +51,7 @@ namespace RestaurantAPI_5._0.Controllers
 
         public ActionResult Delete([FromRoute] int id)
         {
-            _restaurantService.Delete(id,User);
+            _restaurantService.Delete(id);
             return NoContent();
         }
 
