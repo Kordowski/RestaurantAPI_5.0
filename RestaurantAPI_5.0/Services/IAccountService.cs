@@ -5,5 +5,6 @@ namespace RestaurantAPI_5._0.Services
     public interface IAccountService
     {
         void RegisterUser(RegisterUserDto dto);
+        string GenerateJwt(LoginDto dto);
     }
 }
