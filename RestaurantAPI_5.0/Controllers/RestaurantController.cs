@@ -13,7 +13,8 @@ namespace RestaurantAPI_5._0.Controllers
 {
     [Route("api/restaurant")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "Admin,Manager")]
+    //[Authorize]
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
@@ -22,6 +23,21 @@ namespace RestaurantAPI_5._0.Controllers
         {
             _restaurantService = restaurantService;
         }
+        [HttpGet("{id}")]
+        [AllowAnonymous]
+        public ActionResult<RestaurantDto> Get([FromRoute] int id)
+        {
+            var restaurant = _restaurantService.GetById(id);
+            return Ok(restaurant);
+        }
+        [HttpGet]
+        [Authorize]
+        public ActionResult<IEnumerable<RestaurantDto>> GetAll()
+        {
+            var restaurantsDto = _restaurantService.GetAll();
+            return Ok(restaurantsDto);
+        }
+
         [HttpPut("{id}")]
         public ActionResult Update([FromBody] UpdateRestaurantDto dto, [FromRoute] int id)
         {
@@ -44,18 +60,8 @@ namespace RestaurantAPI_5._0.Controllers
             return Created($"/api/restaurant/{id}", null);
         }
 
-        [HttpGet] 
-        public ActionResult<IEnumerable<RestaurantDto>> GetAll()
-        {
-            var restaurantsDto = _restaurantService.GetAll();
-            return Ok(restaurantsDto);
-        }
+        
 
-        [HttpGet("{id}")]
-        public ActionResult<RestaurantDto> Get([FromRoute] int id)
-        {
-           var restaurant = _restaurantService.GetById(id);
-            return Ok(restaurant);
-        }
+        
     }
 }
