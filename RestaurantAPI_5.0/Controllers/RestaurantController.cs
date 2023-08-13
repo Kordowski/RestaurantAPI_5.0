@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Configuration.Conventions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -32,9 +33,9 @@ namespace RestaurantAPI_5._0.Controllers
         }
         [HttpGet]
         [Authorize(Policy ="Atleast20")]
-        public ActionResult<IEnumerable<RestaurantDto>> GetAll()
+        public ActionResult<IEnumerable<RestaurantDto>> GetAll([FromQuery]RestaurantQuery query)
         {
-            var restaurantsDto = _restaurantService.GetAll();
+            var restaurantsDto = _restaurantService.GetAll(query);
             return Ok(restaurantsDto);
         }
 
@@ -63,9 +64,5 @@ namespace RestaurantAPI_5._0.Controllers
             int id = _restaurantService.Create(dto,userId);
             return Created($"/api/restaurant/{id}", null);
         }
-
-        
-
-        
     }
 }

@@ -79,7 +79,7 @@ namespace RestaurantAPI_5._0
 
             var users = restaurantGenerator.Generate(95);
             _dbContext.Restaurants.AddRange(users);
-    }
+        }
 
         private IEnumerable<Restaurant> GetRestaurants()
         {
