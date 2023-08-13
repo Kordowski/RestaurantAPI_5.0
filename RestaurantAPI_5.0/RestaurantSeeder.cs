@@ -1,6 +1,8 @@
-﻿using RestaurantAPI_5._0.Entities;
+﻿using Bogus;
+using RestaurantAPI_5._0.Entities;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace RestaurantAPI_5._0
@@ -17,6 +19,7 @@ namespace RestaurantAPI_5._0
             if (!_dbContext.Database.CanConnect())
                 return;
             seedRestaurants();
+            SeedGeneratedData();
             seedRoles();
             _dbContext.SaveChanges();
         }
@@ -54,6 +57,29 @@ namespace RestaurantAPI_5._0
             };
             return roles;
         }
+        private void SeedGeneratedData()
+        {
+            if (_dbContext.Restaurants.Any())
+                return;
+
+            var locale = "pl";
+            string[] RestaurantCategory = new string[] { "FastFood", "SlowFood", "Barbecue", "Restaurant", "Burgers", "Bar", "Fish_Bar" };
+            var addressGenerator = new Faker<Address>(locale)
+                .RuleFor(a => a.City, f => f.Address.City())
+                .RuleFor(a => a.Street, f => f.Address.StreetAddress())
+                .RuleFor(a => a.PostalCode, f => f.Address.ZipCode());
+
+            var restaurantGenerator = new Faker<Restaurant>(locale)
+                .RuleFor(a => a.Name, f => f.Company.CompanyName())
+                .RuleFor(a => a.Description, f => f.Company.CatchPhrase())
+                .RuleFor(a => a.Address, f => addressGenerator.Generate())
+                .RuleFor(a => a.ContactEmail, f =>f.Internet.Email())
+                .RuleFor(a => a.ContactNumber, f =>f.Person.Phone)
+                .RuleFor(a => a.Category, f => f.PickRandom(RestaurantCategory));
+
+            var users = restaurantGenerator.Generate(95);
+            _dbContext.Restaurants.AddRange(users);
+    }
 
         private IEnumerable<Restaurant> GetRestaurants()
         {
