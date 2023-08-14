@@ -59,9 +59,9 @@ namespace RestaurantAPI_5._0
             });
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality","German","Polish"));
+                options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality", "German", "Polish"));
                 options.AddPolicy("Atleast20", builder => builder.AddRequirements(new MinimumAgeRequirement(20)));
-                options.AddPolicy("CreatedAtleast2Restaurants",builder=>builder.AddRequirements(new CreatedMultipleRestaurantsRequirement(2)));
+                options.AddPolicy("CreatedAtleast2Restaurants", builder => builder.AddRequirements(new CreatedMultipleRestaurantsRequirement(2)));
             });
             services.AddScoped<IAuthorizationHandler, CreatedMultipleRestaurantsRequirementHandler>();
             services.AddScoped<IAuthorizationHandler, MinimumAgeReqiurementHandler>();
@@ -75,17 +75,29 @@ namespace RestaurantAPI_5._0
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<RequestTimeMiddleware>();
-            services.AddScoped<IPasswordHasher<User>,PasswordHasher<User>>();
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+            services.AddScoped<IValidator<RestaurantQuery>, RestaurantQueryValidator>();
             services.AddScoped<IUserContextService, UserContextService>();
             services.AddHttpContextAccessor();
             services.AddSwaggerGen();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("FrontEndClient", builder =>
+
+                builder.AllowAnyMethod()
+                .AllowAnyHeader()
+                .WithOrigins(Configuration["AllowedOrgins"]));
+
+            });
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RestaurantSeeder seeder)
         {
+            app.UseStaticFiles();
+            app.UseCors("FrontEndClient");
             seeder.Seed();
             if (env.IsDevelopment())
             {
@@ -109,6 +121,6 @@ namespace RestaurantAPI_5._0
                 endpoints.MapControllers();
             });
         }
-        
+
     }
 }

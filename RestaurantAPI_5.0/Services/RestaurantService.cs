@@ -7,13 +7,15 @@ using RestaurantAPI_5._0.Authorization;
 using RestaurantAPI_5._0.Entities;
 using RestaurantAPI_5._0.Exceptions;
 using RestaurantAPI_5._0.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace RestaurantAPI_5._0.Services
 {
-    
+
 
     public class RestaurantService : IRestaurantService
     {
@@ -23,7 +25,7 @@ namespace RestaurantAPI_5._0.Services
         private readonly IAuthorizationService _authorizationService;
         private readonly IUserContextService _userContextService;
 
-        public RestaurantService(RestaurantDbContext dbContext, IMapper mapper,ILogger<RestaurantService> logger, IAuthorizationService authorizationService, IUserContextService userContextService)
+        public RestaurantService(RestaurantDbContext dbContext, IMapper mapper, ILogger<RestaurantService> logger, IAuthorizationService authorizationService, IUserContextService userContextService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
@@ -34,7 +36,7 @@ namespace RestaurantAPI_5._0.Services
 
         public void Update(int id, UpdateRestaurantDto dto)
         {
-            
+
             var restaurant = _dbContext
                .Restaurants
                .FirstOrDefault(r => r.Id == id);
@@ -44,7 +46,7 @@ namespace RestaurantAPI_5._0.Services
                 new ResourceOperationRequirement(ResourceOperation.Update)).Result;
             if (!authorizationResult.Succeeded)
             {
-                throw new ForbidException(); 
+                throw new ForbidException();
             }
             restaurant.Name = dto.Name;
             restaurant.Description = dto.Description;
@@ -84,7 +86,7 @@ namespace RestaurantAPI_5._0.Services
             var result = _mapper.Map<RestaurantDto>(restaurant);
             return result;
         }
-        public PagedResult<RestaurantDto> GetAll([FromQuery]RestaurantQuery query)
+        public PagedResult<RestaurantDto> GetAll(RestaurantQuery query)
         {
             var baseQuery = _dbContext
           .Restaurants
@@ -92,19 +94,33 @@ namespace RestaurantAPI_5._0.Services
           .Include(r => r.Dishes)
           .Where(r => query.SearchPhrase == null || r.Name.ToLower().Contains(query.SearchPhrase.ToLower())
                                             || r.Description.ToLower().Contains(query.SearchPhrase.ToLower()));
+            if(!string.IsNullOrEmpty(query.SortBy))
+            {
+                var columnsSelector = new Dictionary<string, Expression<Func<Restaurant, object>>>
+                {
+                    {nameof(Restaurant.Name), r=>r.Name },
+                    {nameof(Restaurant.Description), r=>r.Description },
+                    {nameof(Restaurant.Category), r=>r.Category },
+                };
+                var selectedColumn = columnsSelector[query.SortBy];
+                baseQuery = query.SortDirection == SortDirection.ASC
+                    ? baseQuery.OrderBy(selectedColumn)
+                    : baseQuery.OrderByDescending(selectedColumn);
+            }
+
             var restaurants = baseQuery
           .Skip(query.PageSize * (query.PageNumber - 1))
           .Take(query.PageSize)
           .ToList();
-            var totalItemsCount =baseQuery.Count();
+            var totalItemsCount = baseQuery.Count();
 
             var restaurantsDtos = _mapper.Map<List<RestaurantDto>>(restaurants);
-            var result = new PagedResult<RestaurantDto>(restaurantsDtos, totalItemsCount ,query.PageSize,query.PageNumber);
+            var result = new PagedResult<RestaurantDto>(restaurantsDtos, totalItemsCount, query.PageSize, query.PageNumber);
             return result;
         }
-        public int Create(CreateRestaurantDto dto,int userId)
+        public int Create(CreateRestaurantDto dto, int userId)
         {
-            
+
             var restaurant = _mapper.Map<Restaurant>(dto);
             restaurant.CreatedById = _userContextService.GetUserId;
             _dbContext.Restaurants.Add(restaurant);
