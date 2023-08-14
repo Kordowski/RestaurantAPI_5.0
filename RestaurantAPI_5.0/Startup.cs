@@ -84,11 +84,9 @@ namespace RestaurantAPI_5._0
             services.AddCors(options =>
             {
                 options.AddPolicy("FrontEndClient", builder =>
-
                 builder.AllowAnyMethod()
                 .AllowAnyHeader()
                 .WithOrigins(Configuration["AllowedOrgins"]));
-
             });
 
         }
