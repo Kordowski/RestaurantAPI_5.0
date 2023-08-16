@@ -8,16 +8,17 @@ namespace RestaurantAPI_5._0.Controllers
 {
     [ApiController]
     [Route("file")]
-    [Authorize]
+
 
     public class FileController : ControllerBase
     {
         [HttpGet]
+        [ResponseCache(Duration = 1200, VaryByQueryKeys = new[] {"fileName"})]
         public ActionResult GetFile([FromQuery] string fileName)
         {
             var rootPath = Directory.GetCurrentDirectory();
 
-            var filePath = $"{rootPath}/PrivateFiles/{fileName}";
+             var filePath = $"{rootPath}/PrivateFiles/{fileName}";
 
             var fileExists = System.IO.File.Exists(filePath);
 

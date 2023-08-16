@@ -32,7 +32,7 @@ namespace RestaurantAPI_5._0.Controllers
             return Ok(restaurant);
         }
         [HttpGet]
-        [Authorize(Policy ="Atleast20")]
+        [AllowAnonymous]
         public ActionResult<IEnumerable<RestaurantDto>> GetAll([FromQuery]RestaurantQuery query)
         {
             var restaurantsDto = _restaurantService.GetAll(query);
