@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using Microsoft.EntityFrameworkCore;
 using RestaurantAPI_5._0.Entities;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,19 +19,28 @@ namespace RestaurantAPI_5._0
         {
             if (!_dbContext.Database.CanConnect())
                 return;
-            seedRestaurants();
+            DoPendingMigrations();
+            SeedRestaurants();
             SeedGeneratedData();
-            seedRoles();
+            SeedRoles();
             _dbContext.SaveChanges();
         }
-        private void seedRoles()
+        private void DoPendingMigrations()
+        {
+            var pendingMigrations = _dbContext.Database.GetPendingMigrations();
+            if(pendingMigrations != null && pendingMigrations.Any())
+            {
+                _dbContext.Database.Migrate();
+            }
+        }
+        private void SeedRoles()
         {
             if (_dbContext.Roles.Any())
                 return;
                 var roles = GetRoles();
                 _dbContext.Roles.AddRange(roles);
         }
-        private void seedRestaurants()
+        private void SeedRestaurants()
         {
             if (_dbContext.Restaurants.Any())
                 return;
