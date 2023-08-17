@@ -7,19 +7,19 @@ on:
       - master-pipeline 
   workflow_dispatch:
 
-  jobs:
+jobs:
     build:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
         - name: Setup .NET Core SDK
-            uses: actions/setup-dotnet@v3.2.0
-            with:
+          uses: actions/setup-dotnet@v3.2.0
+          with:
               dotnet-version: 6.0.x
-          - name: Restore dependencies
-           run: dotnet restore
-          - name: Build
+        - name: Restore dependencies
+          run: dotnet restore
+        - name: Build
           run: dotnet build --no-restore
-          - name: Test
+        - name: Test
           run: dotnet test
       
