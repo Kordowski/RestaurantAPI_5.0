@@ -23,7 +23,9 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder();
 
 builder.Host.UseSerilog((ctx, cfg) => cfg.ReadFrom.Configuration(ctx.Configuration));
-var authenticationSettings = new AuthenticationSettings()
+
+var authenticationSettings = new AuthenticationSettings();
+var authenticationSettings = new AuthenticationSettings();
 builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
 builder.Services.AddSingleton(authenticationSettings);
 builder.Services.AddAuthentication(option =>
