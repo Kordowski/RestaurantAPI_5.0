@@ -26,6 +26,7 @@ builder.Host.UseSerilog((ctx, cfg) => cfg.ReadFrom.Configuration(ctx.Configurati
 
 var authenticationSettings = new AuthenticationSettings();
 var authenticationSettings = new AuthenticationSettings();
+var authenticationSettings = new AuthenticationSettings();
 builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
 builder.Services.AddSingleton(authenticationSettings);
 builder.Services.AddAuthentication(option =>
