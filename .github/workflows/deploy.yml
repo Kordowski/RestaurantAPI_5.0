@@ -18,7 +18,7 @@ jobs:
         - name: Build
           run: dotnet build --no-restore
         - name: Publish
-          run: dotnet publish ./RestaurantAPI/RestaurantAPI.csproj -c Release -o ${{ env.DOTNET_ROOT }}/api
+          run: dotnet publish ./RestaurantAPI_5.0/RestaurantAPI_5.0.csproj -c Release -o ${{ env.DOTNET_ROOT }}/api
         - name: Upload a Build Artifact
           uses: actions/upload-artifact@v3.1.2
           with:
