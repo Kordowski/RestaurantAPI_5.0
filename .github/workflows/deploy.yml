@@ -17,12 +17,48 @@ jobs:
         - name: Build
           run: dotnet build --no-restore
         - name: Publish
-          run: dotnet publish ./RestaurantAPI/RstaurantAPI.csproj -c Release -o ${{ env.DOTNET_ROOT }}/api
+          run: dotnet publish ./RestaurantAPI_5.0/RestaurantAPI_5.0.csproj -c Release -o ${{ env.DOTNET_ROOT }}/api
+        - name: Upload a Build Artifact
+          uses: actions/upload-artifact@v3.1.2
+          with:
+            name: api-artifact
+            path: ${{ env.DOTNET_ROOT }}/api
 
 
     deploy-dev:
         runs-on: ubuntu-latest
         needs: build
+        environment:
+          name: 'Dev'
+          url: ${{ steps.deploy-to-azure.outputs.webapp-url }}
         steps:
-            
-        
+          - name: Download a Build Artifact
+            uses: actions/download-artifact@v2.1.1
+            with:
+              name: api-artifact
+          - name: Azure WebApp deploy
+            id: deploy-to-azure
+            uses: Azure/webapps-deploy@v2.2.10
+            with:
+              app-name: 'rafalapi-dev'
+              publish-profile: ${{ secrets.PUBLISH_PROFILE_DEV }}
+              
+    deploy-prod:
+      runs-on: ubuntu-latest
+      needs: deploy-dev
+      environment:
+        name: 'Prod'
+        url: ${{ steps.deploy-to-azure.outputs.webapp-url }}
+      steps:
+          - name: Download a Build Artifact
+            uses: actions/download-artifact@v2.1.1
+            with:
+              name: api-artifact
+          - name: Azure WebApp deploy
+            id: deploy-to-azure
+            uses: Azure/webapps-deploy@v2.2.10
+            with:
+              app-name: 'rafalapi-prod'
+              publish-profile: ${{ secrets.PUBLISH_PROFILE_PROD }}
+              
+ 
