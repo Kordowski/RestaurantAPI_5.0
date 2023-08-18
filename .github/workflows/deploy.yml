@@ -1,4 +1,3 @@
-oy
 name: deploy
 on:
   push:
