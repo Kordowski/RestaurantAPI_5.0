@@ -29,7 +29,6 @@ namespace RestaurantAPI_5._0.Services
             _context.SaveChanges();
 
             return dishEntity.Id;
-
         }
         public DishDto GetById(int restaurantId, int dishId)
         {

@@ -29,10 +29,10 @@ namespace RestaurantAPI_5._0.Middleware
                 context.Response.StatusCode = 400;
                 await context.Response.WriteAsync(badRequestException.Message);
             }
-            catch(ForbidException forbidException)
-            {
-                context.Response.StatusCode = 403;
-            }
+            //catch(ForbidException forbidException)
+            //{
+            //    context.Response.StatusCode = 403;
+            //}
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
