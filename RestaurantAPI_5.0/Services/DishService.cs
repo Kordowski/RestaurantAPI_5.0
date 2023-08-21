@@ -38,7 +38,6 @@ namespace RestaurantAPI_5._0.Services
             {
                 throw new NotFoundException("Dish not found");
             }
-
             var dishDto = _mapper.Map<DishDto>(dish);
             return dishDto;
         }
