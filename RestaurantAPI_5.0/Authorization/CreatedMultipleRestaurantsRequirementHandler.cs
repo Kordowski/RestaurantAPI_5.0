@@ -21,7 +21,6 @@ namespace RestaurantAPI_5._0.Authorization
             var createdRestaurantsCount = _context
                 .Restaurants
                 .Count(r => r.CreatedById == userId);
-
             if (createdRestaurantsCount > requirement.MinimumRestaurantCreated)
             {
                 context.Succeed(requirement);
