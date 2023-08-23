@@ -29,7 +29,7 @@ namespace RestaurantAPI_5._0.Services
         }
         public void RegisterUser(RegisterUserDto dto)
         {
-            var newUser = new User()
+          var newUser = new User()
             {
                 Email = dto.Email,
                 DateOfBirth = dto.DateOfBirth,
