@@ -61,4 +61,3 @@ jobs:
               app-name: 'rafalapi-prod'
               publish-profile: ${{ secrets.PUBLISH_PROFILE_PROD }}
               
- 
